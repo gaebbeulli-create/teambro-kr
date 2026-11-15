@@ -1,0 +1,12 @@
+User-agent: Ads-Naver
+Allow: /
+
+User-agent: Yeti
+Allow: /
+
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin-recruit.html
+
+Sitemap: https://teambro.kr/sitemap.xml

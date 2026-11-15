@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="referrer" content="no-referrer">
+    <title>관리자 | TEAM BRO</title>
+    <script>if (window.top !== window.self) { document.documentElement.style.display = "none"; window.top.location = window.self.location; }</script>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0a0f;color:#fff;min-height:100vh}
+        .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+        .login-box{background:#16161f;border:2px solid #252530;border-radius:20px;padding:40px;width:100%;max-width:360px;text-align:center}
+        .login-box h1{color:#2dd4bf;font-size:1.8rem;margin-bottom:8px}
+        .login-box p{color:#808090;margin-bottom:24px}
+        .login-box input{width:100%;padding:14px;background:#0a0a0f;border:2px solid #252530;border-radius:10px;color:#fff;font-size:1rem;margin-bottom:12px}
+        .login-box input:focus{outline:none;border-color:#2dd4bf}
+        .login-box button{width:100%;padding:14px;background:#2dd4bf;border:none;border-radius:10px;color:#000;font-size:1rem;font-weight:bold;cursor:pointer}
+        .login-box button:hover{background:#5eead4}
+        .login-box button:disabled{opacity:.5;cursor:not-allowed}
+        .error{color:#ef4444;margin-top:12px;font-size:.9rem}
+        .dashboard{display:none}
+        .header{background:#16161f;padding:16px 20px;border-bottom:1px solid #252530;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .header h2{color:#2dd4bf;font-size:1.3rem}
+        .header-right{display:flex;gap:10px;align-items:center}
+        .header-user{color:#808090;font-size:.9rem}
+        .header button{padding:10px 20px;background:#252530;border:none;border-radius:8px;color:#fff;cursor:pointer}
+        .header button:hover{background:#ef4444}
+        .tabs{display:flex;gap:8px;padding:20px;flex-wrap:wrap}
+        .tabs button{padding:12px 20px;background:#16161f;border:2px solid #252530;border-radius:10px;color:#808090;cursor:pointer;font-size:.9rem}
+        .tabs button:hover{border-color:#2dd4bf}
+        .tabs button.active{background:#2dd4bf;border-color:#2dd4bf;color:#000}
+        .content{padding:0 20px 40px}
+        .panel{display:none}
+        .panel.active{display:block}
+        .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
+        .stat{background:#16161f;border:2px solid #252530;border-radius:12px;padding:20px;text-align:center}
+        .stat span{display:block;font-size:2rem;color:#2dd4bf;font-weight:bold}
+        .stat small{color:#808090}
+        .table-box{background:#16161f;border:2px solid #252530;border-radius:12px;overflow:hidden;margin-bottom:20px}
+        .table-head{padding:16px;border-bottom:1px solid #252530;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+        .table-head h3{font-size:1rem}
+        .filters{display:flex;gap:6px;flex-wrap:wrap}
+        .filters button{padding:6px 12px;background:#0a0a0f;border:1px solid #252530;border-radius:6px;color:#808090;font-size:.8rem;cursor:pointer}
+        .filters button:hover,.filters button.active{border-color:#2dd4bf;color:#2dd4bf}
+        .table-wrap{overflow-x:auto}
+        table{width:100%;border-collapse:collapse;min-width:500px}
+        th,td{padding:12px 16px;text-align:left;border-bottom:1px solid #252530}
+        th{background:#0a0a0f;color:#808090;font-size:.85rem}
+        tr:hover{background:#0a0a0f}
+        .badge{padding:4px 10px;border-radius:20px;font-size:.75rem}
+        .badge.new{background:rgba(34,197,94,.2);color:#22c55e}
+        .badge.progress{background:rgba(249,115,22,.2);color:#f97316}
+        .badge.done{background:rgba(45,212,191,.2);color:#2dd4bf}
+        .badge.partner{background:rgba(45,212,191,.2);color:#2dd4bf}
+        .badge.rider{background:rgba(249,115,22,.2);color:#f97316}
+        .badge.settlement{background:rgba(167,139,250,.2);color:#a78bfa}
+        .badge.master{background:rgba(239,68,68,.2);color:#ef4444}
+        .badge.admin{background:rgba(45,212,191,.2);color:#2dd4bf}
+        .btn{padding:6px 10px;border-radius:6px;border:none;font-size:.8rem;cursor:pointer;margin-right:4px}
+        .btn-view{background:#2dd4bf;color:#000}
+        .btn-del{background:#ef4444;color:#fff}
+        .form-box{background:#16161f;border:2px solid #252530;border-radius:12px;padding:20px;margin-bottom:20px}
+        .form-box h3{margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #252530;font-size:1rem}
+        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+        .form-group{margin-bottom:12px}
+        .form-group label{display:block;margin-bottom:6px;color:#b0b0c0;font-size:.85rem}
+        .form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;background:#0a0a0f;border:2px solid #252530;border-radius:8px;color:#fff;font-size:.9rem}
+        .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#2dd4bf}
+        .form-group textarea{min-height:80px;resize:vertical}
+        .form-btn{padding:12px 24px;background:#2dd4bf;border:none;border-radius:8px;color:#000;font-weight:bold;cursor:pointer;margin-top:12px}
+        .form-btn:disabled{opacity:.5;cursor:not-allowed}
+        .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:1000}
+        .modal.show{display:flex}
+        .modal-box{background:#16161f;border:2px solid #252530;border-radius:16px;width:100%;max-width:500px;max-height:80vh;overflow-y:auto}
+        .modal-head{padding:16px 20px;border-bottom:1px solid #252530;display:flex;justify-content:space-between;align-items:center}
+        .modal-head h3{font-size:1rem}
+        .modal-close{width:32px;height:32px;background:#252530;border:none;border-radius:6px;color:#fff;font-size:1.2rem;cursor:pointer}
+        .modal-close:hover{background:#ef4444}
+        .modal-body{padding:20px}
+        .detail-row{display:flex;padding:10px 0;border-bottom:1px solid #252530}
+        .detail-row span:first-child{width:100px;color:#808090;font-size:.85rem;flex-shrink:0}
+        .detail-row span:last-child{flex:1;color:#fff}
+        .status-sel{padding:8px 12px;background:#0a0a0f;border:2px solid #252530;border-radius:6px;color:#fff}
+        .toast{position:fixed;bottom:20px;right:20px;padding:14px 20px;border-radius:10px;color:#fff;font-size:.9rem;transform:translateY(100px);opacity:0;transition:.3s;z-index:9999}
+        .toast.show{transform:translateY(0);opacity:1}
+        .toast.success{background:#22c55e}
+        .toast.error{background:#ef4444}
+        .empty{text-align:center;padding:40px;color:#808090}
+        .empty span{font-size:2.5rem;display:block;margin-bottom:10px}
+        .loading{text-align:center;padding:40px;color:#808090}
+        .upload-box{border:2px dashed #252530;border-radius:10px;padding:20px;text-align:center;cursor:pointer;transition:.3s;position:relative}
+        .upload-box:hover,.upload-box.dragover{border-color:#2dd4bf;background:rgba(45,212,191,.05)}
+        .upload-preview{color:#808090}
+        .upload-preview .upload-icon{font-size:2.5rem;display:block;margin-bottom:8px}
+        .upload-preview p{margin-bottom:4px}
+        .upload-preview small{font-size:.75rem}
+        .remove-img{position:absolute;top:8px;right:8px;padding:4px 10px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-size:.8rem;cursor:pointer}
+        #previewImg{max-width:100%;max-height:200px;border-radius:8px;margin:0 auto;display:block}
+    </style>
+</head>
+<body>
+    <div class="toast" id="toast"></div>
+    <div class="login-wrap" id="loginWrap">
+        <div class="login-box">
+            <h1>TEAM BRO</h1>
+            <p>관리자 로그인</p>
+            <input type="text" id="adminId" placeholder="아이디">
+            <input type="password" id="adminPw" placeholder="비밀번호">
+            <button id="loginBtn">로그인</button>
+            <div class="error" id="loginError"></div>
+        </div>
+    </div>
+    <div class="dashboard" id="dashboard">
+        <div class="header">
+            <h2>TEAM BRO 관리자</h2>
+            <div class="header-right">
+                <span class="header-user" id="currentUser"></span>
+                <button id="logoutBtn">로그아웃</button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="active" data-tab="submissions">📋 신청관리</button>
+            <button data-tab="popups">🎉 팝업</button>
+            <button data-tab="notice">📢 공지</button>
+            <button data-tab="admins">👤 관리자</button>
+            <button data-tab="settings">⚙️ 설정</button>
+            <a href="admin-recruit.html" style="padding:12px 20px;background:#16161f;border:2px solid #2dd4bf;border-radius:10px;color:#2dd4bf;font-size:.9rem;text-decoration:none">🏍️ 지점·라이더 모집</a>
+        </div>
+        <div class="content">
+            <div class="panel active" id="submissionsPanel">
+                <div class="stats">
+                    <div class="stat"><span id="sTotal">0</span><small>전체</small></div>
+                    <div class="stat"><span id="sNew">0</span><small>신규</small></div>
+                    <div class="stat"><span id="sProgress">0</span><small>진행중</small></div>
+                    <div class="stat"><span id="sDone">0</span><small>완료</small></div>
+                </div>
+                <div class="table-box">
+                    <div class="table-head">
+                        <h3>신청 목록</h3>
+                        <div class="filters">
+                            <button class="active" data-filter="all">전체</button>
+                            <button data-filter="협력사 신청">협력사</button>
+                            <button data-filter="라이더 신청">라이더</button>
+                            <button data-filter="정산문의">정산</button>
+                        </div>
+                    </div>
+                    <div class="table-wrap">
+                        <table><thead><tr><th>유형</th><th>이름</th><th>연락처</th><th>상태</th><th>날짜</th><th>관리</th></tr></thead><tbody id="subTable"><tr><td colspan="6"><div class="loading">로딩 중...</div></td></tr></tbody></table>
+                    </div>
+                </div>
+            </div>
+            <div class="panel" id="popupsPanel">
+                <div class="form-box">
+                    <h3>새 팝업 추가</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>제목 *</label><input type="text" id="pTitle"></div>
+                        <div class="form-group"><label>아이콘</label><input type="text" id="pIcon" placeholder="📢"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>이미지 업로드</label>
+                        <div class="upload-box" id="uploadBox">
+                            <input type="file" id="pImageFile" accept="image/*" style="display:none">
+                            <div class="upload-preview" id="uploadPreview">
+                                <span class="upload-icon">📷</span>
+                                <p>클릭하여 이미지 선택</p>
+                                <small>JPG, PNG, GIF (최대 5MB)</small>
+                            </div>
+                            <img id="previewImg" style="display:none">
+                            <button type="button" class="remove-img" id="removeImg" style="display:none">✕ 삭제</button>
+                        </div>
+                        <input type="hidden" id="pImg">
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>버튼 텍스트</label><input type="text" id="pBtnTxt" placeholder="자세히보기"></div>
+                        <div class="form-group"><label>버튼 링크</label><input type="text" id="pBtnLink" placeholder="#contact"></div>
+                        <div class="form-group"><label>활성화</label><select id="pActive"><option value="true">활성</option><option value="false">비활성</option></select></div>
+                    </div>
+                    <div class="form-group"><label>설명</label><textarea id="pDesc"></textarea></div>
+                    <button class="form-btn" id="savePopupBtn">팝업 추가</button>
+                </div>
+                <div class="table-box">
+                    <div class="table-head"><h3>팝업 목록</h3></div>
+                    <div class="table-wrap"><table><thead><tr><th>제목</th><th>아이콘</th><th>상태</th><th>관리</th></tr></thead><tbody id="popupTable"></tbody></table></div>
+                </div>
+            </div>
+            <div class="panel" id="noticePanel">
+                <div class="form-box">
+                    <h3>공지 배너 설정</h3>
+                    <div class="form-group"><label>공지 내용</label><input type="text" id="nText"></div>
+                    <div class="form-grid">
+                        <div class="form-group"><label>배너 색상</label><select id="nColor"><option value="mint">민트</option><option value="orange">오렌지</option><option value="red">빨강</option></select></div>
+                        <div class="form-group"><label>표시 여부</label><select id="nShow"><option value="true">표시</option><option value="false">숨김</option></select></div>
+                    </div>
+                    <button class="form-btn" id="saveNoticeBtn">저장</button>
+                </div>
+            </div>
+            <div class="panel" id="adminsPanel">
+                <div class="form-box" id="addAdminBox">
+                    <h3>관리자 추가 (마스터 전용)</h3>
+                    <div class="form-grid">
+                        <div class="form-group"><label>아이디 *</label><input type="text" id="newAdminId"></div>
+                        <div class="form-group"><label>비밀번호 *</label><input type="password" id="newAdminPw"></div>
+                        <div class="form-group"><label>이름</label><input type="text" id="newAdminName"></div>
+                        <div class="form-group"><label>등급</label><select id="newAdminRole"><option value="admin">관리자</option><option value="master">마스터</option></select></div>
+                    </div>
+                    <button class="form-btn" id="addAdminBtn">관리자 추가</button>
+                </div>
+                <div class="table-box">
+                    <div class="table-head"><h3>관리자 목록</h3></div>
+                    <div class="table-wrap"><table><thead><tr><th>아이디</th><th>이름</th><th>등급</th><th>관리</th></tr></thead><tbody id="adminTable"></tbody></table></div>
+                </div>
+            </div>
+            <div class="panel" id="settingsPanel">
+                <div class="form-box">
+                    <h3>비밀번호 변경</h3>
+                    <div class="form-group"><label>현재 비밀번호</label><input type="password" id="curPw"></div>
+                    <div class="form-group"><label>새 비밀번호</label><input type="password" id="newPw"></div>
+                    <div class="form-group"><label>새 비밀번호 확인</label><input type="password" id="newPw2"></div>
+                    <button class="form-btn" id="changePwBtn">비밀번호 변경</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <div class="modal-head"><h3>신청 상세</h3><button class="modal-close" id="modalClose">✕</button></div>
+            <div class="modal-body" id="modalBody"></div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+    <script src="/config.js"></script>
+    <script>
+        var SUPABASE_URL = window.TB_CONFIG.url;
+        var SUPABASE_KEY = window.TB_CONFIG.key;
+        var sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        var API_BASE = SUPABASE_URL + '/functions/v1/homepage';
+        var currentAdmin = null, authToken = null, subs = [], filter = 'all';
+        var uploadedImageUrl = '';
+
+        function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function(c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+        function toast(m, t) {
+            var el = document.getElementById('toast');
+            el.textContent = m;
+            el.className = 'toast show ' + (t || 'success');
+            setTimeout(function() { el.className = 'toast'; }, 3000);
+        }
+
+        async function apiCall(action, data) {
+            try {
+                var res = await fetch(API_BASE + '/admin-api?action=' + action, {
+                    method: data ? 'POST' : 'GET',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + authToken },
+                    body: data ? JSON.stringify(data) : undefined
+                });
+                var json = await res.json();
+                if (res.status === 401) { toast('세션 만료', 'error'); logout(); return null; }
+                if (json && json.error) toast(json.error, 'error');   // 실패 이유를 화면에 표시
+                return json;
+            } catch(e) { toast('서버 연결 실패', 'error'); return null; }
+        }
+
+        document.getElementById('loginBtn').onclick = async function() {
+            var id = document.getElementById('adminId').value.trim();
+            var pw = document.getElementById('adminPw').value;
+            var btn = this, errEl = document.getElementById('loginError');
+            if (!id || !pw) { errEl.textContent = '아이디와 비밀번호를 입력하세요'; return; }
+            btn.disabled = true; btn.textContent = '로그인 중...'; errEl.textContent = '';
+            try {
+                var res = await fetch(API_BASE + '/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ admin_id: id, password: pw })
+                });
+                var data = await res.json();
+                if (data.success && data.token) {
+                    authToken = data.token;
+                    currentAdmin = data.admin;
+                    sessionStorage.setItem('adminToken', authToken);
+                    sessionStorage.setItem('adminData', JSON.stringify(currentAdmin));
+                    showDashboard();
+                } else { errEl.textContent = data.error || '로그인 실패'; }
+            } catch(e) { errEl.textContent = '서버 연결 실패'; }
+            btn.disabled = false; btn.textContent = '로그인';
+        };
+        document.getElementById('adminPw').onkeypress = function(e) { if (e.key === 'Enter') document.getElementById('loginBtn').click(); };
+
+        function logout() {
+            if (authToken) apiCall('logout').catch(function(){});
+            sessionStorage.clear(); authToken = null; currentAdmin = null; location.reload();
+        }
+        document.getElementById('logoutBtn').onclick = logout;
+
+        var savedToken = sessionStorage.getItem('adminToken');
+        var savedAdmin = sessionStorage.getItem('adminData');
+        if (savedToken && savedAdmin) { authToken = savedToken; currentAdmin = JSON.parse(savedAdmin); showDashboard(); }
+
+        function showDashboard() {
+            document.getElementById('loginWrap').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('currentUser').textContent = currentAdmin.name || currentAdmin.admin_id;
+            if (currentAdmin.role !== 'master') document.getElementById('addAdminBox').style.display = 'none';
+            loadAll();
+        }
+
+        document.querySelectorAll('.tabs button').forEach(function(btn) {
+            btn.onclick = function() {
+                var tab = this.getAttribute('data-tab');
+                document.querySelectorAll('.tabs button').forEach(function(b) { b.className = ''; });
+                document.querySelectorAll('.panel').forEach(function(p) { p.className = 'panel'; });
+                this.className = 'active';
+                document.getElementById(tab + 'Panel').className = 'panel active';
+            };
+        });
+
+        document.querySelectorAll('.filters button').forEach(function(btn) {
+            btn.onclick = function() {
+                filter = this.getAttribute('data-filter');
+                document.querySelectorAll('.filters button').forEach(function(b) { b.className = ''; });
+                this.className = 'active';
+                renderSubs();
+            };
+        });
+
+        function loadAll() { loadSubs(); loadPopups(); loadNotice(); loadAdmins(); }
+
+        async function loadSubs() {
+            var res = await apiCall('get-submissions');
+            if (!res) return;
+            subs = Array.isArray(res) ? res : (res.submissions || []);
+            document.getElementById('sTotal').textContent = subs.length;
+            document.getElementById('sNew').textContent = subs.filter(function(s) { return s.status === '신규'; }).length;
+            document.getElementById('sProgress').textContent = subs.filter(function(s) { return s.status === '진행중'; }).length;
+            document.getElementById('sDone').textContent = subs.filter(function(s) { return s.status === '완료'; }).length;
+            renderSubs();
+        }
+
+        function renderSubs() {
+            var list = filter === 'all' ? subs : subs.filter(function(s) { return s.type === filter; });
+            var tb = document.getElementById('subTable');
+            if (!list.length) { tb.innerHTML = '<tr><td colspan="6"><div class="empty"><span>📭</span>신청 없음</div></td></tr>'; return; }
+            var html = '';
+            list.forEach(function(s) {
+                var tc = s.type === '협력사 신청' ? 'partner' : s.type === '라이더 신청' ? 'rider' : 'settlement';
+                var sc = s.status === '신규' ? 'new' : s.status === '진행중' ? 'progress' : 'done';
+                var tn = s.type ? s.type.replace(' 신청', '').replace('문의', '') : '-';
+                var date = new Date(s.created_at).toLocaleDateString('ko-KR');
+                html += '<tr><td><span class="badge ' + tc + '">' + tn + '</span></td><td>' + esc(s.name || '-') + '</td><td>' + esc(s.phone || '-') + '</td><td><span class="badge ' + sc + '">' + esc(s.status || '신규') + '</span></td><td>' + date + '</td><td><button class="btn btn-view" onclick="viewSub(' + s.id + ')">상세</button><button class="btn btn-del" onclick="delSub(' + s.id + ')">삭제</button></td></tr>';
+            });
+            tb.innerHTML = html;
+        }
+
+        window.viewSub = function(id) {
+            var s = subs.find(function(x) { return x.id == id; });
+            if (!s) return;
+            var h = '<div class="detail-row"><span>유형</span><span>' + esc(s.type || '-') + '</span></div>';
+            h += '<div class="detail-row"><span>이름</span><span>' + esc(s.name || '-') + '</span></div>';
+            h += '<div class="detail-row"><span>연락처</span><span>' + esc(s.phone || '-') + '</span></div>';
+            if (s.type === '협력사 신청') { h += '<div class="detail-row"><span>사업자번호</span><span>' + esc(s.biz_num || '-') + '</span></div><div class="detail-row"><span>희망지역</span><span>' + esc(s.region || '-') + '</span></div>'; }
+            else if (s.type === '라이더 신청') { h += '<div class="detail-row"><span>지역</span><span>' + esc(s.region || '-') + '</span></div><div class="detail-row"><span>경력</span><span>' + esc(s.experience || '-') + '</span></div><div class="detail-row"><span>시간대</span><span>' + esc(s.work_time || '-') + '</span></div>'; }
+            else if (s.type === '정산문의') { h += '<div class="detail-row"><span>상호</span><span>' + esc(s.company || '-') + '</span></div><div class="detail-row"><span>구분</span><span>' + esc(s.settlement_type || '-') + '</span></div><div class="detail-row"><span>플랫폼</span><span>' + esc(s.platform || '-') + '</span></div>'; }
+            h += '<div class="detail-row"><span>문의</span><span>' + esc(s.message || '-') + '</span></div>';
+            h += '<div class="detail-row"><span>날짜</span><span>' + new Date(s.created_at).toLocaleString('ko-KR') + '</span></div>';
+            h += '<div class="detail-row"><span>상태</span><span><select class="status-sel" onchange="updateSub(' + s.id + ',this.value)"><option value="신규"' + (s.status === '신규' ? ' selected' : '') + '>신규</option><option value="진행중"' + (s.status === '진행중' ? ' selected' : '') + '>진행중</option><option value="완료"' + (s.status === '완료' ? ' selected' : '') + '>완료</option></select></span></div>';
+            document.getElementById('modalBody').innerHTML = h;
+            document.getElementById('modal').className = 'modal show';
+        };
+        window.updateSub = async function(id, st) { var res = await apiCall('update-submission', { id: id, status: st }); if (res && res.success) { toast('상태 변경됨'); loadSubs(); } };
+        window.delSub = async function(id) { if (!confirm('삭제?')) return; var res = await apiCall('delete-submission', { id: id }); if (res && res.success) { toast('삭제됨'); loadSubs(); } };
+        document.getElementById('modalClose').onclick = function() { document.getElementById('modal').className = 'modal'; };
+        document.getElementById('modal').onclick = function(e) { if (e.target === this) this.className = 'modal'; };
+
+        async function loadPopups() {
+            var res = await apiCall('get-popups');
+            if (!res) return;
+            var list = Array.isArray(res) ? res : (res.popups || []);
+            var tb = document.getElementById('popupTable');
+            if (!list.length) { tb.innerHTML = '<tr><td colspan="4"><div class="empty"><span>🎈</span>팝업 없음</div></td></tr>'; return; }
+            var html = '';
+            list.forEach(function(p) { html += '<tr><td>' + esc(p.title) + '</td><td>' + esc(p.icon || '📢') + '</td><td><span class="badge ' + (p.active ? 'new' : 'done') + '">' + (p.active ? '활성' : '비활성') + '</span></td><td><button class="btn btn-view" onclick="togglePopup(' + p.id + ',' + !p.active + ')">' + (p.active ? '비활성화' : '활성화') + '</button><button class="btn btn-del" onclick="delPopup(' + p.id + ')">삭제</button></td></tr>'; });
+            tb.innerHTML = html;
+        }
+
+        // 이미지 업로드
+        var uploadBox = document.getElementById('uploadBox');
+        uploadBox.onclick = function() { document.getElementById('pImageFile').click(); };
+        uploadBox.ondragover = function(e) { e.preventDefault(); this.classList.add('dragover'); };
+        uploadBox.ondragleave = function() { this.classList.remove('dragover'); };
+        uploadBox.ondrop = function(e) { e.preventDefault(); this.classList.remove('dragover'); if (e.dataTransfer.files.length > 0) handleImageUpload(e.dataTransfer.files[0]); };
+        document.getElementById('pImageFile').onchange = function(e) { if (e.target.files.length > 0) handleImageUpload(e.target.files[0]); };
+        document.getElementById('removeImg').onclick = function(e) {
+            e.stopPropagation();
+            uploadedImageUrl = '';
+            document.getElementById('pImg').value = '';
+            document.getElementById('previewImg').style.display = 'none';
+            document.getElementById('uploadPreview').style.display = 'block';
+            this.style.display = 'none';
+            document.getElementById('pImageFile').value = '';
+        };
+
+        async function handleImageUpload(file) {
+            if (file.size > 5 * 1024 * 1024) { toast('5MB 이하만 가능', 'error'); return; }
+            if (!file.type.startsWith('image/')) { toast('이미지 파일만 가능', 'error'); return; }
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('previewImg').style.display = 'block';
+                document.getElementById('uploadPreview').style.display = 'none';
+                document.getElementById('removeImg').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+            toast('이미지 업로드 중...');
+            try {
+                var b64 = await new Promise(function(ok, no) { var r = new FileReader(); r.onload = function() { ok(String(r.result).split(',')[1]); }; r.onerror = no; r.readAsDataURL(file); });
+                var res = await apiCall('upload-image', { type: file.type, data: b64 });
+                if (!res || !res.success) { toast('업로드 실패: ' + ((res && res.error) || ''), 'error'); return; }
+                uploadedImageUrl = res.url;
+                document.getElementById('pImg').value = uploadedImageUrl;
+                toast('이미지 업로드 완료!');
+            } catch(e) { toast('업로드 실패', 'error'); }
+        }
+
+        document.getElementById('savePopupBtn').onclick = async function() {
+            var title = document.getElementById('pTitle').value.trim();
+            if (!title) { toast('제목 입력', 'error'); return; }
+            var res = await apiCall('add-popup', { title: title, icon: document.getElementById('pIcon').value.trim() || '📢', image_url: document.getElementById('pImg').value.trim(), description: document.getElementById('pDesc').value.trim(), btn_text: document.getElementById('pBtnTxt').value.trim() || '자세히보기', btn_link: document.getElementById('pBtnLink').value.trim() || '#contact', active: document.getElementById('pActive').value === 'true' });
+            if (res && res.success) {
+                toast('팝업 추가됨');
+                document.getElementById('pTitle').value = '';
+                document.getElementById('pIcon').value = '';
+                document.getElementById('pImg').value = '';
+                document.getElementById('pDesc').value = '';
+                document.getElementById('pBtnTxt').value = '';
+                document.getElementById('pBtnLink').value = '';
+                uploadedImageUrl = '';
+                document.getElementById('previewImg').style.display = 'none';
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('removeImg').style.display = 'none';
+                document.getElementById('pImageFile').value = '';
+                loadPopups();
+            }
+        };
+        window.togglePopup = async function(id, active) { var res = await apiCall('update-popup', { id: id, active: active }); if (res && res.success) { toast('변경됨'); loadPopups(); } };
+        window.delPopup = async function(id) { if (!confirm('삭제?')) return; var res = await apiCall('delete-popup', { id: id }); if (res && res.success) { toast('삭제됨'); loadPopups(); } };
+
+        async function loadNotice() {
+            var res = await apiCall('get-notice');
+            if (!res) return;
+            var notice = res.notice || res;
+            if (notice && notice.text !== undefined) { document.getElementById('nText').value = notice.text || ''; document.getElementById('nColor').value = notice.color || 'mint'; document.getElementById('nShow').value = notice.show ? 'true' : 'false'; }
+        }
+        document.getElementById('saveNoticeBtn').onclick = async function() {
+            var res = await apiCall('save-notice', { text: document.getElementById('nText').value, color: document.getElementById('nColor').value, show: document.getElementById('nShow').value === 'true' });
+            if (res && res.success) toast('공지 저장됨');
+        };
+
+        async function loadAdmins() {
+            var res = await apiCall('get-admins');
+            if (!res) return;
+            var list = Array.isArray(res) ? res : (res.admins || []);
+            var tb = document.getElementById('adminTable');
+            if (!list.length) { tb.innerHTML = '<tr><td colspan="4"><div class="empty"><span>👤</span>관리자 없음</div></td></tr>'; return; }
+            var html = '';
+            list.forEach(function(a) { html += '<tr><td>' + esc(a.admin_id) + '</td><td>' + esc(a.name || '-') + '</td><td><span class="badge ' + a.role + '">' + (a.role === 'master' ? '마스터' : '관리자') + '</span></td><td>' + (currentAdmin.role === 'master' && a.admin_id !== currentAdmin.admin_id ? '<button class="btn btn-del" onclick="delAdmin(' + a.id + ')">삭제</button>' : '') + '</td></tr>'; });
+            tb.innerHTML = html;
+        }
+        document.getElementById('addAdminBtn').onclick = async function() {
+            var id = document.getElementById('newAdminId').value.trim(), pw = document.getElementById('newAdminPw').value, name = document.getElementById('newAdminName').value.trim(), role = document.getElementById('newAdminRole').value;
+            if (!id || !pw) { toast('아이디/비번 입력', 'error'); return; }
+            var res = await apiCall('add-admin', { admin_id: id, password: pw, name: name || id, role: role });
+            if (res && res.error) toast(res.error, 'error');
+            else if (res && res.success) { toast('추가됨'); document.getElementById('newAdminId').value = ''; document.getElementById('newAdminPw').value = ''; document.getElementById('newAdminName').value = ''; loadAdmins(); }
+        };
+        window.delAdmin = async function(id) { if (!confirm('삭제?')) return; var res = await apiCall('delete-admin', { id: id }); if (res && res.error) toast(res.error, 'error'); else if (res && res.success) { toast('삭제됨'); loadAdmins(); } };
+
+        document.getElementById('changePwBtn').onclick = async function() {
+            var curPw = document.getElementById('curPw').value, newPw = document.getElementById('newPw').value, newPw2 = document.getElementById('newPw2').value;
+            if (!curPw || !newPw || !newPw2) { toast('모든 항목 입력', 'error'); return; }
+            if (newPw !== newPw2) { toast('새 비번 불일치', 'error'); return; }
+            var res = await apiCall('change-password', { current_password: curPw, new_password: newPw });
+            if (res && res.error) toast(res.error, 'error');
+            else if (res && res.success) { toast('비밀번호 변경됨'); document.getElementById('curPw').value = ''; document.getElementById('newPw').value = ''; document.getElementById('newPw2').value = ''; }
+        };
+    </script>
+</body>
+</html>

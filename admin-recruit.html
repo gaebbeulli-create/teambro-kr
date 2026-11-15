@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<meta name="referrer" content="no-referrer">
+<title>지점·라이더 모집 관리 | TEAM BRO</title>
+<style>
+@font-face{font-family:'BMHANNAPro';src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_seven@1.0/BMHANNAPro.woff') format('woff');font-display:swap}
+@font-face{font-family:'BMJUA';src:url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');font-display:swap}
+@font-face{font-family:'Pretendard';src:url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');font-display:swap}
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#16161f;--line:#252530;--g3:#b0b0c0;--g4:#808090;--g5:#606070;--mint:#2dd4bf;--mint2:#5eead4;--glow:rgba(45,212,191,.2);--orange:#f97316;--red:#ef4444;--green:#22c55e}
+body{font-family:'Pretendard',sans-serif;background:var(--bg);color:#fff;font-size:15px;line-height:1.6;min-height:100vh}
+button{font-family:inherit}
+.login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.lbox{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:44px 36px;width:100%;max-width:380px;text-align:center}
+.logo{font-family:'BMHANNAPro',sans-serif;color:var(--mint);font-size:1.9rem}
+.lbox p{color:var(--g4);margin:4px 0 26px;font-size:.9rem}
+input,select,textarea{width:100%;padding:12px 14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:#fff;font-size:.93rem;font-family:inherit}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--mint);box-shadow:0 0 0 3px var(--glow)}
+select option{background:var(--bg)}
+textarea{min-height:90px;resize:vertical}
+.lbox input{margin-bottom:12px}
+.btn{padding:12px 22px;border:none;border-radius:12px;cursor:pointer;font-family:'BMJUA',sans-serif;font-size:.95rem;transition:all .2s}
+.btn-p{background:var(--mint);color:#000}.btn-p:hover{background:var(--mint2)}
+.btn-g{background:var(--bg);color:var(--g3);border:1px solid var(--line)}.btn-g:hover{border-color:var(--mint);color:var(--mint)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.lbox .btn{width:100%;margin-top:6px}
+.err{color:var(--red);font-size:.85rem;min-height:20px;margin-top:10px}
+.app{display:none}
+.top{position:sticky;top:0;z-index:20;background:rgba(10,10,15,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.top .logo{font-size:1.25rem}
+.top small{color:var(--g5);margin-left:4px}
+.tabs{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.tab{padding:8px 16px;background:var(--card);border:1px solid var(--line);border-radius:100px;color:var(--g3);cursor:pointer;font-size:.88rem}
+.tab.on{background:var(--glow);border-color:var(--mint);color:var(--mint);font-weight:700}
+.wrap{max-width:1150px;margin:0 auto;padding:26px 20px 70px}
+.panel{display:none}.panel.on{display:block}
+h1{font-family:'BMHANNAPro',sans-serif;font-size:1.5rem;font-weight:400}
+.desc{color:var(--g4);font-size:.9rem;margin:2px 0 20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-bottom:18px;overflow:hidden}
+.ch{padding:16px 20px;border-bottom:1px solid var(--line);font-family:'BMJUA',sans-serif;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.cb{padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.full{grid-column:1/-1}
+label{display:block;color:var(--g3);font-size:.83rem;margin-bottom:6px}
+label small{color:var(--g5)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:16px}
+.hint{font-size:.8rem;color:var(--g4)}
+.hint.ok{color:var(--green)}.hint.bad{color:var(--orange)}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{padding:12px 16px;text-align:left;border-bottom:1px solid var(--line);font-size:.88rem;vertical-align:middle}
+th{background:var(--bg);color:var(--g4);font-size:.78rem}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:.73rem;font-weight:700;white-space:nowrap}
+.on1{background:rgba(34,197,94,.15);color:var(--green)}.off1{background:rgba(128,128,144,.15);color:var(--g4)}.warn{background:rgba(249,115,22,.15);color:var(--orange)}
+.a{padding:6px 11px;border-radius:8px;border:none;cursor:pointer;font-size:.78rem;font-weight:700;margin-right:4px}
+.a-e{background:rgba(249,115,22,.15);color:var(--orange)}.a-d{background:rgba(239,68,68,.15);color:var(--red)}
+td select{padding:7px 10px;font-size:.85rem;min-width:150px}
+.empty{text-align:center;color:var(--g5);padding:36px}
+.muted{color:var(--g5);font-size:.8rem}
+.toast{position:fixed;right:20px;bottom:20px;padding:13px 20px;border-radius:12px;font-weight:600;opacity:0;transform:translateY(80px);transition:.3s;z-index:99}
+.toast.show{opacity:1;transform:none}.toast.ok{background:var(--green)}.toast.err{background:var(--red)}
+</style>
+</head>
+<body>
+<div class="login" id="login">
+  <form class="lbox" id="loginForm">
+    <div class="logo">TEAM BRO</div>
+    <p>지점·라이더 모집 관리</p>
+    <input id="lid" placeholder="관리자 아이디" autocomplete="username" required>
+    <input id="lpw" type="password" placeholder="비밀번호" autocomplete="current-password" required>
+    <button class="btn btn-p" id="lbtn" type="submit">로그인</button>
+    <div class="err" id="lerr"></div>
+  </form>
+</div>
+
+<div class="app" id="app">
+  <div class="top">
+    <span class="logo">TEAM BRO</span><small>지점·라이더 모집 관리</small>
+    <div class="tabs">
+      <button class="tab on" data-t="assign" type="button">🏍️ 라이더 배정</button>
+      <button class="tab" data-t="branch" type="button">🏢 지점 관리</button>
+      <button class="tab" data-t="recruit" type="button">📝 모집글</button>
+      <a class="tab" href="/admin.html" style="text-decoration:none">← 기존 관리자</a>
+      <button class="tab" id="logout" type="button">로그아웃</button>
+    </div>
+  </div>
+  <div class="wrap">
+
+    <section class="panel on" id="p-assign">
+      <h1>라이더 배정</h1>
+      <p class="desc">라이더 신청자에게 자동 배정된 지점을 확인하고, 필요하면 바꿉니다. 바꾸면 바로 저장돼요.</p>
+      <div class="card"><div class="ch">라이더 신청 목록 <span class="muted" id="aCount"></span></div>
+        <div class="tw"><table><thead><tr><th>신청일</th><th>이름</th><th>연락처</th><th>거주 지역</th><th>경력·시간</th><th>배정 지점</th><th>거리</th><th>상태</th></tr></thead><tbody id="aBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-branch">
+      <h1>지점 관리</h1>
+      <p class="desc">라이더 배정: 라이더 위치의 동이 "담당 동네"에 있으면 그 지점, 없으면 좌표상 가장 가까운 지점. 홈페이지에는 "팀브로 {지역}점"과 담당 동네만 보이고, 지점명·연락처·담당자·메모는 노출되지 않아요.</p>
+      <div class="card"><div class="ch"><span id="bFormTitle">새 지점 추가</span></div>
+        <form class="cb" id="bForm">
+          <div class="grid">
+            <div><label>지점명 * <small>관리용</small></label><input id="bName" maxlength="50" required placeholder="예: 표준대구달서A팀브로"></div>
+            <div><label>지역 * <small>홈페이지에 "팀브로 ○○점"으로 표시</small></label><input id="bRegion" maxlength="50" required placeholder="예: 대구 달서"></div>
+            <div><label>연락처 <small>비공개</small></label><input id="bPhone" maxlength="20" placeholder="010-0000-0000"></div>
+            <div><label>담당자 이름 <small>비공개</small></label><input id="bManager" maxlength="40"></div>
+            <div class="full"><label>주소</label>
+              <div style="display:flex;gap:8px"><input id="bAddr" maxlength="200" placeholder="예: 대구광역시 달서구 야외음악당로7길 57"><button class="btn btn-g" type="button" id="geoBtn" style="white-space:nowrap">좌표 찾기</button></div>
+              <div class="hint" id="geoHint" style="margin-top:6px"></div>
+            </div>
+            <div><label>위도 <small>자동 입력</small></label><input id="bLat" inputmode="decimal" placeholder="35.xxxx"></div>
+            <div><label>경도 <small>자동 입력</small></label><input id="bLng" inputmode="decimal" placeholder="128.xxxx"></div>
+            <div class="full"><label>담당 동네 <small>쉼표로 구분 · 홈페이지 노출</small></label><textarea id="bAreas" maxlength="2000" placeholder="예: 본리동, 상인동, 도원동, 진천동, 화원읍"></textarea></div>
+            <div><label>매칭 지역 키 <small>시·군·구 이름, 여러 개는 |</small></label><input id="bCity" maxlength="100" placeholder="예: 대구 / 시흥시 / 경산시|대구"></div>
+            <div><label>상태</label><select id="bActive"><option value="true">활성 (홈페이지 노출)</option><option value="false">비활성</option></select></div>
+            <div class="full"><label>메모 <small>비공개</small></label><textarea id="bMemo" maxlength="1000"></textarea></div>
+          </div>
+          <div class="row"><button class="btn btn-p" type="submit" id="bSave">지점 추가</button><button class="btn btn-g" type="button" id="bCancel" style="display:none">취소</button></div>
+        </form>
+      </div>
+      <div class="card"><div class="ch">지점 목록</div>
+        <div class="tw"><table><thead><tr><th>지점명</th><th>지역</th><th>연락처</th><th>담당 동네 · 좌표</th><th>상태</th><th>관리</th></tr></thead><tbody id="bBody"></tbody></table></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p-recruit">
+      <h1>라이더 모집글</h1>
+      <p class="desc">teambro.kr/recruit.html 과 메인 "라이더를 찾고 있는 지점"에 나옵니다. 마감일이 지나면 자동으로 마감 표시돼요.</p>
+      <div class="card"><div class="ch"><span id="rFormTitle">새 모집글 작성</span></div>
+        <form class="cb" id="rForm">
+          <div class="grid">
+            <div><label>지점 *</label><select id="rBranch" required></select></div>
+            <div><label>상태</label><select id="rStatus"><option>모집중</option><option>마감</option></select></div>
+            <div class="full"><label>제목 *</label><input id="rTitle" maxlength="100" required placeholder="예: 달서점 배민커넥트 라이더 모집"></div>
+            <div><label>건당 단가</label><input id="rPay" maxlength="100" placeholder="예: 평균 3,500원"></div>
+            <div><label>예상 월수익</label><input id="rIncome" maxlength="100" placeholder="예: 300~500만원"></div>
+            <div><label>근무 시간</label><input id="rTime" maxlength="100" placeholder="예: 자유 / 피크타임"></div>
+            <div><label>문의 연락처 <small>비우면 지점 연락처</small></label><input id="rContact" maxlength="20"></div>
+            <div><label>모집 마감일</label><input id="rDeadline" type="date"></div>
+            <div class="full"><label>복지·혜택</label><textarea id="rBenefits" maxlength="1000" placeholder="예: 전기오토바이 렌탈 지원, 익일 정산, 정비 할인"></textarea></div>
+            <div class="full"><label>상세 안내</label><textarea id="rDesc" maxlength="3000" style="min-height:140px"></textarea></div>
+          </div>
+          <p class="hint" style="margin-top:10px">⚠️ 수익 금액은 실제 지급 실적에 근거한 내용만 적어주세요. 근거 없는 수익 보장 문구는 광고 규정 문제가 될 수 있어요.</p>
+          <div class="row"><button class="btn btn-p" type="submit" id="rSave">모집글 등록</button><button class="btn btn-g" type="button" id="rCancel" style="display:none">취소</button></div>
+        </form>
+      </div>
+      <div class="card"><div class="ch">모집글 목록</div>
+        <div class="tw"><table><thead><tr><th>제목</th><th>지점</th><th>상태</th><th>조회</th><th>마감일</th><th>관리</th></tr></thead><tbody id="rBody"></tbody></table></div>
+      </div>
+    </section>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="/config.js"></script>
+<script src="/kakao-key.js"></script>
+<script>
+if (window.top !== window.self) { document.documentElement.style.display = 'none'; window.top.location = window.self.location; }
+(function () {
+  'use strict';
+  var C = window.TB_CONFIG || {};
+  var FN = (C.url || '') + '/functions/v1/homepage';
+  var KAKAO_KEY = (window.TB_KAKAO_KEY || '').trim();
+  var TK = 'tb_rc_token';
+  var token = sessionStorage.getItem('adminToken') || sessionStorage.getItem(TK) || '';
+  var branches = [], recruits = [], subs = [], editB = 0, editR = 0;
+
+  function $(id) { return document.getElementById(id); }
+  function esc(s) { return s == null ? '' : String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function toast(m, ok) { var t = $('toast'); t.textContent = m; t.className = 'toast show ' + (ok ? 'ok' : 'err'); clearTimeout(t._t); t._t = setTimeout(function () { t.className = 'toast'; }, 2800); }
+  function headers(auth) { var h = { 'Content-Type': 'application/json', apikey: C.key }; if (auth) h.Authorization = 'Bearer ' + token; return h; }
+
+  function api(action, body) {
+    return fetch(FN + '/admin-api?action=' + encodeURIComponent(action), {
+      method: body ? 'POST' : 'GET', headers: headers(true), body: body ? JSON.stringify(body) : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (j) {
+        if (r.status === 401) { logout(true); throw new Error('세션이 만료되었습니다. 다시 로그인하세요.'); }
+        if (!r.ok || (j && j.error)) throw new Error((j && j.error) || '요청 실패');
+        return j;
+      });
+    });
+  }
+
+  // ---------- 로그인 ----------
+  $('loginForm').onsubmit = function (e) {
+    e.preventDefault();
+    var b = $('lbtn'); b.disabled = true; $('lerr').textContent = '';
+    fetch(FN + '/admin-login', { method: 'POST', headers: headers(false), body: JSON.stringify({ admin_id: $('lid').value.trim(), password: $('lpw').value }) })
+      .then(function (r) { return r.json().then(function (j) { return { r: r, j: j }; }); })
+      .then(function (x) {
+        if (!x.r.ok || !x.j.token) throw new Error(x.j.error || '로그인 실패');
+        token = x.j.token; sessionStorage.setItem(TK, token); sessionStorage.setItem('adminToken', token); if (x.j.admin) sessionStorage.setItem('adminData', JSON.stringify(x.j.admin)); $('lpw').value = ''; start();
+      })
+      .catch(function (err) { $('lerr').textContent = err.message; })
+      .finally(function () { b.disabled = false; });
+  };
+  function logout(silent) {
+    if (!silent && token) api('logout', {}).catch(function () {});
+    token = ''; sessionStorage.removeItem(TK); sessionStorage.removeItem('adminToken'); sessionStorage.removeItem('adminData');
+    $('app').style.display = 'none'; $('login').style.display = 'flex';
+  }
+  $('logout').onclick = function () { logout(false); };
+
+  function start() {
+    $('login').style.display = 'none'; $('app').style.display = 'block';
+    loadBranches().then(function () { loadRecruits(); loadSubs(); });
+  }
+
+  document.querySelectorAll('.tab[data-t]').forEach(function (t) {
+    t.onclick = function () {
+      document.querySelectorAll('.tab[data-t]').forEach(function (x) { x.classList.remove('on'); });
+      document.querySelectorAll('.panel').forEach(function (x) { x.classList.remove('on'); });
+      t.classList.add('on'); $('p-' + t.getAttribute('data-t')).classList.add('on');
+    };
+  });
+
+  function bName(id) { var b = branches.find(function (x) { return x.id === id; }); return b ? b.name : ''; }
+  function fmtDate(s) { if (!s) return '-'; var d = new Date(s); return (d.getMonth() + 1) + '/' + d.getDate() + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); }
+
+  // ---------- 라이더 배정 ----------
+  function loadSubs() {
+    return api('get-submissions').then(function (d) {
+      subs = (d || []).filter(function (s) { return s.type === '라이더 신청'; });
+      renderSubs();
+    }).catch(function (e) { toast(e.message); });
+  }
+  function renderSubs() {
+    $('aCount').textContent = subs.length + '건';
+    if (!subs.length) { $('aBody').innerHTML = '<tr><td colspan="8" class="empty">라이더 신청이 없습니다</td></tr>'; return; }
+    var opts = '<option value="">미배정</option>' + branches.map(function (b) { return '<option value="' + b.id + '">' + esc(b.name) + (b.active ? '' : ' (비활성)') + '</option>'; }).join('');
+    $('aBody').innerHTML = subs.map(function (s) {
+      var st = s.status === '신규' ? 'on1' : s.status === '진행중' ? 'warn' : 'off1';
+      return '<tr><td>' + fmtDate(s.created_at) + '</td><td>' + esc(s.name) + '</td><td><a href="tel:' + esc(s.phone) + '" style="color:var(--mint)">' + esc(s.phone) + '</a></td>'
+        + '<td>' + esc(s.region || '-') + '</td><td class="muted">' + esc([s.experience, s.work_time].filter(Boolean).join(' · ') || '-') + '</td>'
+        + '<td><select data-sid="' + s.id + '">' + opts + '</select></td>'
+        + '<td>' + (s.distance_km != null ? esc(s.distance_km) + 'km' : '<span class="muted">-</span>') + '</td>'
+        + '<td><span class="badge ' + st + '">' + esc(s.status) + '</span></td></tr>';
+    }).join('');
+    $('aBody').querySelectorAll('select[data-sid]').forEach(function (sel) {
+      var s = subs.find(function (x) { return x.id === Number(sel.getAttribute('data-sid')); });
+      sel.value = s.branch_id ? String(s.branch_id) : '';
+      sel.onchange = function () {
+        var v = sel.value ? Number(sel.value) : null;
+        api('assign-branch', { id: s.id, branch_id: v }).then(function () { s.branch_id = v; toast(v ? bName(v) + '(으)로 배정했습니다' : '배정을 해제했습니다', true); })
+          .catch(function (e) { sel.value = s.branch_id ? String(s.branch_id) : ''; toast(e.message); });
+      };
+    });
+  }
+
+  // ---------- 지점 ----------
+  function loadBranches() {
+    return api('get-branches').then(function (d) { branches = d || []; renderBranches(); fillBranchSelect(); }).catch(function (e) { toast(e.message); });
+  }
+  function renderBranches() {
+    if (!branches.length) { $('bBody').innerHTML = '<tr><td colspan="6" class="empty">등록된 지점이 없습니다</td></tr>'; return; }
+    $('bBody').innerHTML = branches.map(function (b) {
+      var hasXY = b.lat != null && b.lng != null;
+      return '<tr><td><b>' + esc(b.name) + '</b>' + (b.manager_name ? '<br><span class="muted">' + esc(b.manager_name) + '</span>' : '') + '</td><td>' + esc(b.region) + '</td><td>' + esc(b.phone || '-') + '</td>'
+        + '<td>' + (b.areas ? '<span class="muted">' + esc(b.areas.split(',').length) + '개 동</span> ' : '<span class="badge warn">동네 없음</span> ') + (hasXY ? '<span class="badge on1">좌표</span>' : '<span class="badge warn">좌표 없음</span>') + '</td>'
+        + '<td><span class="badge ' + (b.active ? 'on1' : 'off1') + '">' + (b.active ? '활성' : '비활성') + '</span></td>'
+        + '<td><button class="a a-e" data-eb="' + b.id + '" type="button">수정</button><button class="a a-d" data-db="' + b.id + '" type="button">삭제</button></td></tr>';
+    }).join('');
+    $('bBody').querySelectorAll('[data-eb]').forEach(function (x) { x.onclick = function () { editBranch(Number(x.getAttribute('data-eb'))); }; });
+    $('bBody').querySelectorAll('[data-db]').forEach(function (x) { x.onclick = function () { delBranch(Number(x.getAttribute('data-db'))); }; });
+  }
+  function fillBranchSelect() {
+    var cur = $('rBranch').value;
+    $('rBranch').innerHTML = '<option value="">지점 선택</option>' + branches.map(function (b) { return '<option value="' + b.id + '">' + esc(b.name) + ' (' + esc(b.region) + ')' + (b.active ? '' : ' - 비활성') + '</option>'; }).join('');
+    $('rBranch').value = cur;
+  }
+  function resetB() {
+    $('bForm').reset(); editB = 0; $('bFormTitle').textContent = '새 지점 추가'; $('bSave').textContent = '지점 추가'; $('bCancel').style.display = 'none'; $('geoHint').textContent = '';
+  }
+  function editBranch(id) {
+    var b = branches.find(function (x) { return x.id === id; }); if (!b) return;
+    editB = id; $('bName').value = b.name || ''; $('bRegion').value = b.region || ''; $('bPhone').value = b.phone || ''; $('bManager').value = b.manager_name || '';
+    $('bAddr').value = b.address || ''; $('bLat').value = b.lat != null ? b.lat : ''; $('bLng').value = b.lng != null ? b.lng : '';
+    $('bActive').value = b.active ? 'true' : 'false'; $('bMemo').value = b.memo || ''; $('bAreas').value = (b.areas || '').split(',').join(', '); $('bCity').value = b.area_city || '';
+    $('bFormTitle').textContent = '지점 수정 · ' + b.name; $('bSave').textContent = '수정 저장'; $('bCancel').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  $('bCancel').onclick = resetB;
+  function delBranch(id) {
+    if (!confirm(bName(id) + ' 지점을 삭제할까요?\n연결된 모집글과 라이더 배정은 "지점 없음"으로 바뀝니다.')) return;
+    api('delete-branch', { id: id }).then(function () { toast('삭제했습니다', true); loadBranches().then(function () { loadRecruits(); loadSubs(); }); }).catch(function (e) { toast(e.message); });
+  }
+
+  var kakaoP = null;
+  function kakao() {
+    if (kakaoP) return kakaoP;
+    kakaoP = new Promise(function (ok, no) {
+      if (!KAKAO_KEY) return no(new Error('kakao-key.js 에 카카오 JavaScript 키가 없습니다. 위도·경도를 직접 넣어주세요.'));
+      var s = document.createElement('script');
+      s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&libraries=services&appkey=' + encodeURIComponent(KAKAO_KEY);
+      s.onload = function () { window.kakao.maps.load(function () { ok(window.kakao); }); };
+      s.onerror = function () { kakaoP = null; no(new Error('카카오 지도를 불러오지 못했습니다. 키와 등록 도메인을 확인하세요.')); };
+      document.head.appendChild(s);
+    });
+    return kakaoP;
+  }
+  function geocode() {
+    var q = $('bAddr').value.trim(), h = $('geoHint');
+    if (!q) { h.className = 'hint bad'; h.textContent = '주소를 먼저 입력하세요.'; return Promise.resolve(false); }
+    h.className = 'hint'; h.textContent = '좌표 찾는 중…';
+    return kakao().then(function (k) {
+      return new Promise(function (ok) {
+        new k.maps.services.Geocoder().addressSearch(q, function (r, st) {
+          if (st === k.maps.services.Status.OK && r[0]) {
+            $('bLat').value = Number(r[0].y).toFixed(6); $('bLng').value = Number(r[0].x).toFixed(6);
+            h.className = 'hint ok'; h.textContent = '✓ 좌표 확인: ' + (r[0].address_name || q); ok(true);
+          } else { h.className = 'hint bad'; h.textContent = '주소로 좌표를 못 찾았어요. 도로명 주소로 다시 넣거나 위도·경도를 직접 입력하세요.'; ok(false); }
+        });
+      });
+    }).catch(function (e) { h.className = 'hint bad'; h.textContent = e.message; return false; });
+  }
+  $('geoBtn').onclick = geocode;
+
+  $('bForm').onsubmit = function (e) {
+    e.preventDefault();
+    var go = function () {
+      var lat = parseFloat($('bLat').value), lng = parseFloat($('bLng').value);
+      var body = { id: editB || undefined, name: $('bName').value.trim(), region: $('bRegion').value.trim(), phone: $('bPhone').value.trim(),
+        manager_name: $('bManager').value.trim(), address: $('bAddr').value.trim(), memo: $('bMemo').value.trim(),
+        lat: isFinite(lat) ? lat : null, lng: isFinite(lng) ? lng : null, active: $('bActive').value === 'true',
+        areas: $('bAreas').value.split(/[,\n]/).map(function (x) { return x.trim(); }).filter(Boolean).join(','), area_city: $('bCity').value.trim() };
+      if (!body.name || !body.region) return toast('지점명과 지역은 필수입니다');
+      var b = $('bSave'); b.disabled = true;
+      api('save-branch', body).then(function () {
+        toast(editB ? '수정했습니다' : '지점을 추가했습니다', true);
+        if (body.lat == null) toast('저장했지만 좌표가 없어 거리 매칭에서 빠집니다', false);
+        resetB(); return loadBranches().then(renderSubs);
+      }).catch(function (er) { toast(er.message); }).finally(function () { b.disabled = false; });
+    };
+    if ($('bAddr').value.trim() && (!$('bLat').value || !$('bLng').value) && KAKAO_KEY) geocode().then(go); else go();
+  };
+
+  // ---------- 모집글 ----------
+  function loadRecruits() {
+    return api('get-recruits').then(function (d) { recruits = d || []; renderRecruits(); }).catch(function (e) { toast(e.message); });
+  }
+  function renderRecruits() {
+    if (!recruits.length) { $('rBody').innerHTML = '<tr><td colspan="6" class="empty">작성된 모집글이 없습니다</td></tr>'; return; }
+    var t = new Date().toISOString().slice(0, 10);
+    $('rBody').innerHTML = recruits.map(function (r) {
+      var expired = r.deadline && r.deadline < t, on = r.status === '모집중' && !expired;
+      return '<tr><td><b>' + esc(r.title) + '</b></td><td>' + esc(bName(r.branch_id) || '지점 없음') + '</td>'
+        + '<td><span class="badge ' + (on ? 'on1' : 'off1') + '">' + (on ? '모집중' : expired ? '기한 지남' : '마감') + '</span></td>'
+        + '<td>' + (r.view_count || 0) + '</td><td>' + esc(r.deadline || '-') + '</td>'
+        + '<td><button class="a a-e" data-er="' + r.id + '" type="button">수정</button><button class="a a-d" data-dr="' + r.id + '" type="button">삭제</button></td></tr>';
+    }).join('');
+    $('rBody').querySelectorAll('[data-er]').forEach(function (x) { x.onclick = function () { editRecruit(Number(x.getAttribute('data-er'))); }; });
+    $('rBody').querySelectorAll('[data-dr]').forEach(function (x) { x.onclick = function () { delRecruit(Number(x.getAttribute('data-dr'))); }; });
+  }
+  function resetR() { $('rForm').reset(); editR = 0; $('rFormTitle').textContent = '새 모집글 작성'; $('rSave').textContent = '모집글 등록'; $('rCancel').style.display = 'none'; }
+  function editRecruit(id) {
+    var r = recruits.find(function (x) { return x.id === id; }); if (!r) return;
+    editR = id; $('rBranch').value = r.branch_id ? String(r.branch_id) : ''; $('rStatus').value = r.status; $('rTitle').value = r.title || '';
+    $('rPay').value = r.pay_per_order || ''; $('rIncome').value = r.monthly_income || ''; $('rTime').value = r.work_time || '';
+    $('rContact').value = r.contact_phone || ''; $('rDeadline').value = r.deadline || ''; $('rBenefits').value = r.benefits || ''; $('rDesc').value = r.description || '';
+    $('rFormTitle').textContent = '모집글 수정'; $('rSave').textContent = '수정 저장'; $('rCancel').style.display = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+  $('rCancel').onclick = resetR;
+  function delRecruit(id) {
+    if (!confirm('이 모집글을 삭제할까요? 마감 처리만 하려면 "수정"에서 상태를 마감으로 바꾸세요.')) return;
+    api('delete-recruit', { id: id }).then(function () { toast('삭제했습니다', true); loadRecruits(); }).catch(function (e) { toast(e.message); });
+  }
+  $('rForm').onsubmit = function (e) {
+    e.preventDefault();
+    var body = { id: editR || undefined, branch_id: Number($('rBranch').value), status: $('rStatus').value, title: $('rTitle').value.trim(),
+      pay_per_order: $('rPay').value.trim(), monthly_income: $('rIncome').value.trim(), work_time: $('rTime').value.trim(),
+      contact_phone: $('rContact').value.trim(), deadline: $('rDeadline').value, benefits: $('rBenefits').value.trim(), description: $('rDesc').value.trim() };
+    if (!body.branch_id) return toast('지점을 선택하세요');
+    if (!body.title) return toast('제목을 입력하세요');
+    var b = $('rSave'); b.disabled = true;
+    api('save-recruit', body).then(function () { toast(editR ? '수정했습니다' : '모집글을 등록했습니다', true); resetR(); loadRecruits(); })
+      .catch(function (er) { toast(er.message); }).finally(function () { b.disabled = false; });
+  };
+
+  if (!C.url) { $('lerr').textContent = '설정 파일(config.js)을 불러오지 못했습니다.'; }
+  if (token) start();
+})();
+</script>
+</body>
+</html>
